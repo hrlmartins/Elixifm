@@ -19,6 +19,7 @@ defmodule Elixifm.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
+      # applications: [:confex],
       mod: {Elixifm.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
@@ -42,7 +43,8 @@ defmodule Elixifm.MixProject do
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:confex, "~> 3.3.1"}
     ]
   end
 

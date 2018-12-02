@@ -1,4 +1,4 @@
-defmodule ElixifmWeb.PlayingController do
+defmodule ElixifmWeb.ServiceController do
   use ElixifmWeb, :controller
 
   def playing(conn, params) do

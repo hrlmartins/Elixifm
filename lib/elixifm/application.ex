@@ -6,6 +6,7 @@ defmodule Elixifm.Application do
   use Application
 
   def start(_type, _args) do
+    :ets.new(:user_session, [:set, :public, :named_table, write_concurrency: true])
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository

@@ -23,6 +23,6 @@ defmodule ElixifmWeb.Router do
   scope "/api", ElixifmWeb do
     pipe_through :api
 
-    post "/playing", PlayingController, :playing
+    post "/playing", SystemController, :playing
   end
 end
