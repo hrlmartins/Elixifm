@@ -23,6 +23,9 @@ defmodule ElixifmWeb.Router do
   scope "/api", ElixifmWeb do
     pipe_through :api
 
+    auth_callback_path = Confex.fetch_env!(:elixifm, :auth_callback_path)
+
     post "/playing", SystemController, :playing
+    #post auth_callback_path, AuthController, :service_callback
   end
 end
