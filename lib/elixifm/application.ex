@@ -6,11 +6,10 @@ defmodule Elixifm.Application do
   use Application
 
   def start(_type, _args) do
-    :ets.new(:user_session, [:set, :public, :named_table, write_concurrency: true])
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
-      Elixifm.Repo,
+      # Elixifm.Repo,
       # Start the endpoint when the application starts
       ElixifmWeb.Endpoint
       # Starts a worker by calling: Elixifm.Worker.start_link(arg)
