@@ -3,22 +3,14 @@ defmodule ElixifmWeb.SystemControllerTest do
 
   import Mox
 
-  setup_all do
-    track = %Elixifm.Track{artist: "Pearl Jam", name: "Ten"}
-
-    Elixifm.PlayingMock
-    |> expect(:playing, fn _name -> {:ok, track} end)
-
-    :ok
-  end
   setup :verify_on_exit!
 
   describe "playing/2" do
     test "Returns user playing info when input is valid", %{conn: conn} do
       track = %Elixifm.Track{artist: "Pearl Jam", name: "Ten"}
 
-      # elixifm.playingmock
-      # |> expect(:playing, fn _name -> {:ok, track} end)
+      Elixifm.PlayingMock
+      |> expect(:playing, fn _name -> {:ok, track} end)
 
       response =
         conn
