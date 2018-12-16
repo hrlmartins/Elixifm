@@ -1,8 +1,11 @@
 defmodule Elixifm.Services.LastFm do
+  @behaviour Elixifm.Playing
+
   @base_url "https://ws.audioscrobbler.com/2.0/"
   @service_id Confex.fetch_env!(:elixifm, :service_access_id)
 
-  def get_playing(username) do
+  @impl Elixifm.Playing
+  def playing(username) do
     with request_url <- gen_url(username),
          {:ok, content} <- make_request(request_url),
          track <- parse_response(content) do

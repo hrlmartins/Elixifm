@@ -25,13 +25,7 @@ defmodule ElixifmWeb.ChannelCase do
     end
   end
 
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Elixifm.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Elixifm.Repo, {:shared, self()})
-    end
-
+  setup _tags do
     :ok
   end
 end

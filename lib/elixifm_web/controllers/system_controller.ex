@@ -17,7 +17,7 @@ defmodule ElixifmWeb.SystemController do
   end
 
   defp process_request(input, _params) when input != "" do
-    with {:ok, content} <- LastFm.get_playing(input) do
+    with {:ok, content} <- LastFm.playing(input) do
       {:ok, Responses.generate_private_message(content)}
     else
       {:err, reason} -> IO.puts(reason)
