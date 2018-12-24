@@ -10,4 +10,5 @@ config :elixifm, ElixifmWeb.Endpoint,
 config :logger, level: :warn
 
 config :elixifm,
-  music_service: Elixifm.PlayingMock
+  music_service: Elixifm.PlayingMock,
+  music_service_url: "http://localhost:8000/"

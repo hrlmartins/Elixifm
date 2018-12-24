@@ -33,6 +33,7 @@ defmodule Elixifm.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bypass, "~> 1.0", only: :test},
       {:phoenix, "~> 1.4.0"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_html, "~> 2.11"},

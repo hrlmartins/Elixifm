@@ -1,7 +1,7 @@
 defmodule Elixifm.Services.LastFm do
   @behaviour Elixifm.Playing
 
-  @base_url "https://ws.audioscrobbler.com/2.0/"
+  @base_url Confex.fetch_env!(:elixifm, :music_service_url)
   @service_id Confex.fetch_env!(:elixifm, :service_access_id)
 
   @impl Elixifm.Playing

@@ -23,7 +23,6 @@ defmodule ElixifmWeb.SystemControllerTest do
       }
 
       assert response == expected
-
     end
   end
 end

@@ -10,7 +10,8 @@ use Mix.Config
 config :elixifm,
   base_url: {:system, "ELIXIFM_BASE_URL", "localhost"},
   service_access_id: {:system, "ELIXIFM_SERVICE_ACCESS_ID", "123"},
-  music_service: Elixifm.Services.LastFm
+  music_service: Elixifm.Services.LastFm,
+  music_service_url: "https://ws.audioscrobbler.com/2.0/"
 
 # Configures the endpoint
 config :elixifm, ElixifmWeb.Endpoint,
