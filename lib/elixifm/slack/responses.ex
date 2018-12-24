@@ -3,8 +3,8 @@ defmodule Elixifm.Slack.Responses do
     generate_message_with_type(message, "ephemeral")
   end
 
-  def generate_private_message(%Elixifm.Track{} = track) do
-    generate_playing_message(track)
+  def generate_private_message(%Elixifm.Track{} = track, username) do
+    generate_playing_message(track, username)
     |> generate_message_with_type("ephemeral")
   end
 
@@ -12,8 +12,13 @@ defmodule Elixifm.Slack.Responses do
     generate_message_with_type(message, "in_channel")
   end
 
-  defp generate_playing_message(%Elixifm.Track{artist: artist, name: name} = _track) do
-    "_Playing: *#{artist} - #{name}*_"
+  def generate_channel_message(%Elixifm.Track{} = track, username) do
+    generate_playing_message(track, username)
+    |> generate_message_with_type("in_channel")
+  end
+
+  defp generate_playing_message(%Elixifm.Track{artist: artist, name: name} = _track, username) do
+    "_#{username} played: *#{artist} - #{name}*_"
   end
 
   defp generate_message_with_type(message, type) do

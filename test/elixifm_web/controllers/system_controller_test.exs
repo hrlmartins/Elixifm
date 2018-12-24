@@ -14,15 +14,30 @@ defmodule ElixifmWeb.SystemControllerTest do
 
       response =
         conn
-        |> post("/api/playing", text: "micah")
+        |> post("/api/playing", text: "micah", user_name: "micah")
         |> json_response(200)
 
       expected = %{
-        "text" => "_Playing: *Pearl Jam - Ten*_",
-        "response_type" => "ephemeral"
+        "text" => "_micah played: *Pearl Jam - Ten*_",
+        "response_type" => "in_channel"
       }
 
       assert response == expected
+    end
+
+    test "Returns info message when provided service username is empty", %{conn: conn} do
+      response =
+        conn
+        |> post("/api/playing", text: "", user_name: "micah")
+        |> json_response(200)
+
+      expected = %{
+        "text" => "_micah played: *Pearl Jam - Ten*_",
+        "response_type" => "in_channel"
+      }
+
+      assert Map.get(response, "response_type") == "ephemeral"
+      assert Map.get(response, "text") |> String.contains?("DANG!")
     end
   end
 end
