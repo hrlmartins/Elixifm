@@ -11,6 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :elixifm, ElixifmWeb.Endpoint,
   url: [scheme: "https", host: "elixifm.herokuapp.com", port: 443],
+  http: [:inet6, port: System.get_env("PORT") || 4000],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
