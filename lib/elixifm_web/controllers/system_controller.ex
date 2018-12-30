@@ -13,7 +13,6 @@ defmodule ElixifmWeb.SystemController do
       |> put_resp_content_type("application/json")
       |> send_resp(200, response)
     else
-      ## TODO build error response
       _ -> conn |> send_resp(500, "Upsy doosy")
     end
   end
