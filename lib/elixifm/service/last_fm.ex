@@ -1,6 +1,8 @@
 defmodule Elixifm.Services.LastFm do
   @behaviour Elixifm.Playing
 
+  require Logger
+
   @base_url Confex.fetch_env!(:elixifm, :music_service_url)
   @service_id Confex.fetch_env!(:elixifm, :service_access_id)
 
@@ -21,12 +23,15 @@ defmodule Elixifm.Services.LastFm do
   end
 
   defp make_request(request_url) do
+    Logger.debug("Invoking music service endpoint with url: #{request_url}")
+
     case HTTPoison.get(request_url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        Logger.debug(fn -> "Response from music service: #{inspect(body)}" end)
         {:ok, body}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        IO.puts(reason)
+        Logger.warn("Request to music service failed with reason: #{reason}")
         {:err, "not the expected response"}
     end
   end

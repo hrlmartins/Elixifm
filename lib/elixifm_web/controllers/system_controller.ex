@@ -1,5 +1,6 @@
 defmodule ElixifmWeb.SystemController do
   use ElixifmWeb, :controller
+  require Logger
 
   alias Elixifm.Slack.Responses
 
@@ -9,6 +10,8 @@ defmodule ElixifmWeb.SystemController do
     with trimed_input <- input |> String.trim(),
          trimmed_username <- username |> String.trim(),
          {:ok, response} <- process_request(trimed_input, trimmed_username, params) do
+      Logger.info("Processing complete, responding to service")
+
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(200, response)
@@ -17,17 +20,25 @@ defmodule ElixifmWeb.SystemController do
     end
   end
 
-  defp process_request(input, username, _params) when input != "" do
-    with {:ok, content} <- @music_service.playing(input) do
+  defp process_request(music_service_username, username, _params)
+       when music_service_username != "" do
+    Logger.info(
+      "Processing - Requesting information for user #{music_service_username} on music service"
+    )
+
+    with {:ok, content} <- @music_service.playing(music_service_username) do
       {:ok, Responses.generate_channel_message(content, username)}
     else
-      {:err, reason} -> IO.puts(reason)
+      {:err, reason} ->
+        Logger.warn("Processing - music service information request failed: #{reason}")
+        {:err, reason}
     end
   end
 
-  defp process_request(_input, _username, _params) do
-    msg = "DANG! Someday I'll manage to guess what is your user in Last.Fm." <>
-      " Until then provide me your LastFm username paleeeeease!"
+  defp process_request(_music_service_username, _username, _params) do
+    msg =
+      "DANG! Someday I'll manage to guess what is your user in Last.Fm." <>
+        " Until then provide me your LastFm username paleeeeease!"
 
     {:ok, Responses.generate_private_message(msg)}
   end
