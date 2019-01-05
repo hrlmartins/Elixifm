@@ -19,7 +19,7 @@ defmodule ElixifmWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: ElixifmWeb
+      use Phoenix.Controller, namespace: ElixifmWeb, log: :info
 
       import Plug.Conn
       import ElixifmWeb.Gettext
