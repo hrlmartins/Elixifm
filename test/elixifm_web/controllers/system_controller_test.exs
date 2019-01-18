@@ -31,11 +31,6 @@ defmodule ElixifmWeb.SystemControllerTest do
         |> post("/api/playing", text: "", user_name: "micah")
         |> json_response(200)
 
-      expected = %{
-        "text" => "_micah played: *Pearl Jam - Ten*_",
-        "response_type" => "in_channel"
-      }
-
       assert Map.get(response, "response_type") == "ephemeral"
       assert Map.get(response, "text") |> String.contains?("DANG!")
     end

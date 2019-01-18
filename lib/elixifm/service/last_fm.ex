@@ -10,10 +10,10 @@ defmodule Elixifm.Services.LastFm do
   def playing(username) do
     with request_url <- gen_url(username),
          {:ok, content} <- make_request(request_url),
-         track <- parse_response(content) do
+         track <- parse_track_response(content) do
       {:ok, track}
     else
-      _ -> {:err, "Unable to fetch data"}
+      {:err, reason} -> {:err, reason}
     end
   end
 
@@ -28,15 +28,31 @@ defmodule Elixifm.Services.LastFm do
     case HTTPoison.get(request_url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         Logger.debug(fn -> "Response from music service: #{inspect(body)}" end)
-        {:ok, body}
+        if is_error_response?(body) do
+          {:err, extract_error(body)}
+        else
+          {:ok , body}
+        end
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.warn("Request to music service failed with reason: #{reason}")
-        {:err, "not the expected response"}
+        {:err, reason}
     end
   end
 
-  defp parse_response(response) do
+  defp is_error_response?(response) do
+    response
+    |> Jason.decode!()
+    |> Map.has_key?("error")
+  end
+
+  defp extract_error(response) do
+    response
+    |> Jason.decode!()
+    |> Map.get("message", "DefaultError")
+  end
+
+  defp parse_track_response(response) do
     response
     |> Jason.decode!()
     |> create_track()
