@@ -13,7 +13,7 @@ defmodule Elixifm.Services.LastFm do
          track <- parse_track_response(content) do
       {:ok, track}
     else
-      {:err, reason} -> {:err, reason}
+      {status, reason} -> {status, reason}
     end
   end
 
@@ -28,16 +28,32 @@ defmodule Elixifm.Services.LastFm do
     case HTTPoison.get(request_url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         Logger.debug(fn -> "Response from music service: #{inspect(body)}" end)
-        if is_error_response?(body) do
-          {:err, extract_error(body)}
-        else
-          {:ok , body}
-        end
+        body |> process_response()
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         Logger.warn("Request to music service failed with reason: #{reason}")
         {:err, reason}
     end
+  end
+
+  defp process_response(response) do
+    if is_error_response?(response) do
+      {:err, extract_error(response)}
+    else
+      if is_track_empty?(response) do
+        {:empty, "No played track"}
+      else
+        {:ok, response}
+      end
+    end
+  end
+
+  defp is_track_empty?(response) do
+    response
+    |> Jason.decode!()
+    |> Map.get("recenttracks")
+    |> Map.get("track")
+    |> Enum.empty?()
   end
 
   defp is_error_response?(response) do

@@ -36,4 +36,16 @@ defmodule Elixifm.Services.LastFmTest do
 
     assert {:err, "User not found"} == Elixifm.Services.LastFm.playing("someone")
   end
+
+  test "Returns :empty for a user that has no songs played", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "GET", "/", fn conn ->
+      Plug.Conn.resp(conn, 200, ~s<{
+        "recenttracks": {
+          "track": []
+        }
+    }>)
+    end)
+
+    assert {:empty, "No played track"} == Elixifm.Services.LastFm.playing("someone")
+  end
 end
