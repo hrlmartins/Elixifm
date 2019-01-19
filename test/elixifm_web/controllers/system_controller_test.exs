@@ -7,7 +7,7 @@ defmodule ElixifmWeb.SystemControllerTest do
 
   describe "playing/2" do
     test "Returns user playing info when input is valid", %{conn: conn} do
-      track = %Elixifm.Track{artist: "Pearl Jam", name: "Ten"}
+      track = %Elixifm.Track{artist: "Pearl Jam", name: "Ten", playing: false}
 
       Elixifm.PlayingMock
       |> expect(:playing, fn _name -> {:ok, track} end)
@@ -22,7 +22,30 @@ defmodule ElixifmWeb.SystemControllerTest do
         |> Service.Constants.user_url()
 
       expected = %{
-        "text" => "<#{user_url}|@micah> played: *Pearl Jam - Ten*",
+        "text" => "<#{user_url}|@micah> last played: *Pearl Jam - Ten*",
+        "response_type" => "in_channel"
+      }
+
+      assert response == expected
+    end
+
+    test "Returns user playing info when input is valid and music is playing", %{conn: conn} do
+      track = %Elixifm.Track{artist: "Pearl Jam", name: "Ten", playing: true}
+
+      Elixifm.PlayingMock
+      |> expect(:playing, fn _name -> {:ok, track} end)
+
+      response =
+        conn
+        |> post("/api/playing", text: "micah", user_name: "micah")
+        |> json_response(200)
+
+      user_url =
+        "micah"
+        |> Service.Constants.user_url()
+
+      expected = %{
+        "text" => "<#{user_url}|@micah> is playing: *Pearl Jam - Ten*",
         "response_type" => "in_channel"
       }
 

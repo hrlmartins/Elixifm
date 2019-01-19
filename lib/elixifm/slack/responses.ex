@@ -13,15 +13,23 @@ defmodule Elixifm.Slack.Responses do
   end
 
   defp generate_playing_message(
-         %Elixifm.Track{artist: artist, name: name} = _track,
+         %Elixifm.Track{artist: artist, name: name, playing: true} = _track,
          username,
          service_username
        ) do
-    user_url =
-      service_username
-      |> Service.Constants.user_url()
+    user_url = user_profile_url(service_username)
 
-    "<#{user_url}|@#{username}> played: *#{artist} - #{name}*"
+    "<#{user_url}|@#{username}> is playing: *#{artist} - #{name}*"
+  end
+
+  defp generate_playing_message(
+         %Elixifm.Track{artist: artist, name: name, playing: false} = _track,
+         username,
+         service_username
+       ) do
+    user_url = user_profile_url(service_username)
+
+    "<#{user_url}|@#{username}> last played: *#{artist} - #{name}*"
   end
 
   defp generate_message_with_type(message, type) do
@@ -33,5 +41,10 @@ defmodule Elixifm.Slack.Responses do
 
   defp generate_simple_text(message) do
     %{"text" => message}
+  end
+
+  defp user_profile_url(service_username) do
+    service_username
+    |> Service.Constants.user_url()
   end
 end

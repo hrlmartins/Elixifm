@@ -91,6 +91,18 @@ defmodule Elixifm.Services.LastFm do
       track
       |> Map.get("name")
 
-    %Elixifm.Track{artist: artist, name: track_name}
+    %Elixifm.Track{
+      artist: artist,
+      name: track_name,
+      playing: is_playing?(Map.get(track, "@attr"))
+    }
   end
+
+  defp is_playing?(attribute) when is_map(attribute) do
+    attribute
+    |> Map.get("nowplaying")
+    |> String.to_existing_atom()
+  end
+
+  defp is_playing?(_attribute), do: false
 end
