@@ -34,7 +34,7 @@ defmodule Elixifm.Services.LastFmTest do
       }>)
     end)
 
-    assert {:err, "User not found"} == Elixifm.Services.LastFm.playing("someone")
+    assert {:app_error, "User not found"} == Elixifm.Services.LastFm.playing("someone")
   end
 
   test "Returns :empty for a user that has no songs played", %{bypass: bypass} do

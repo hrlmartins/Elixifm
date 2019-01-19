@@ -34,5 +34,41 @@ defmodule ElixifmWeb.SystemControllerTest do
       assert Map.get(response, "response_type") == "ephemeral"
       assert Map.get(response, "text") |> String.contains?("DANG!")
     end
+
+    test "Returns an info message when an application error happens", %{conn: conn} do
+      Elixifm.PlayingMock
+      |> expect(:playing, fn _name -> {:app_error, "User not found"} end)
+
+      expected = %{
+        "text" => "oh oh! Your request failed: User not found",
+        "response_type" => "ephemeral"
+      }
+
+      response =
+        conn
+        |> post("/api/playing", text: "johndoe", user_name: "micah")
+        |> json_response(200)
+
+      assert response == expected
+    end
+
+    test "Returns 'no tracks played' when the service returns an empty list of tracks", %{
+      conn: conn
+    } do
+      Elixifm.PlayingMock
+      |> expect(:playing, fn _name -> {:empty, "No tracks"} end)
+
+      expected = %{
+        "text" => "That user has no played tracks!",
+        "response_type" => "ephemeral"
+      }
+
+      response =
+        conn
+        |> post("/api/playing", text: "userwithnotracks", user_name: "micah")
+        |> json_response(200)
+
+      assert response == expected
+    end
   end
 end

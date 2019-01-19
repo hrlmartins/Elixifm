@@ -38,7 +38,7 @@ defmodule Elixifm.Services.LastFm do
 
   defp process_response(response) do
     if is_error_response?(response) do
-      {:err, extract_error(response)}
+      {:app_error, extract_error(response)}
     else
       if is_track_empty?(response) do
         {:empty, "No played track"}

@@ -32,6 +32,12 @@ defmodule ElixifmWeb.SystemController do
       {:err, reason} ->
         Logger.warn("Processing - music service information request failed: #{reason}")
         {:err, reason}
+
+      {:app_error, reason} ->
+        application_error_response(reason)
+
+      {:empty, _} ->
+        no_tracks_played_response()
     end
   end
 
@@ -40,6 +46,16 @@ defmodule ElixifmWeb.SystemController do
       "DANG! Someday I'll manage to guess what is your user in Last.Fm." <>
         " Until then provide me your LastFm username paleeeeease!"
 
+    {:ok, Responses.generate_private_message(msg)}
+  end
+
+  defp application_error_response(reason) do
+    msg = "oh oh! Your request failed: #{reason}"
+    {:ok, Responses.generate_private_message(msg)}
+  end
+
+  defp no_tracks_played_response do
+    msg = "That user has no played tracks!"
     {:ok, Responses.generate_private_message(msg)}
   end
 end
