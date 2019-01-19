@@ -17,8 +17,12 @@ defmodule ElixifmWeb.SystemControllerTest do
         |> post("/api/playing", text: "micah", user_name: "micah")
         |> json_response(200)
 
+      user_url =
+        "micah"
+        |> Service.Constants.user_url()
+
       expected = %{
-        "text" => "_micah played: *Pearl Jam - Ten*_",
+        "text" => "<#{user_url}|@micah> played: *Pearl Jam - Ten*",
         "response_type" => "in_channel"
       }
 

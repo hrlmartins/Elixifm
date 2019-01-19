@@ -27,7 +27,7 @@ defmodule ElixifmWeb.SystemController do
     )
 
     with {:ok, content} <- @music_service.playing(music_service_username) do
-      {:ok, Responses.generate_channel_message(content, username)}
+      {:ok, Responses.generate_channel_message(content, username, music_service_username)}
     else
       {:err, reason} ->
         Logger.warn("Processing - music service information request failed: #{reason}")
